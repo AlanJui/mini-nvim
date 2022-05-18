@@ -1,8 +1,20 @@
-vim.cmd [[set runtimepath=$VIMRUNTIME]]
-vim.cmd [[set packpath=/tmp/nvim/site]]
+local on_windows = vim.loop.os_uname().version:match 'Windows'
 
-local package_root = '/tmp/nvim/site/pack'
-local install_path = package_root .. '/packer/start/packer.nvim'
+local function join_paths(...)
+  local path_sep = on_windows and '\\' or '/'
+  local result = table.concat({ ... }, path_sep)
+  return result
+end
+
+vim.cmd [[set runtimepath=$VIMRUNTIME]]
+
+local temp_dir = vim.loop.os_getenv 'TEMP' or '/tmp'
+
+vim.cmd('set packpath=' .. join_paths(temp_dir, 'nvim', 'site'))
+
+local package_root = join_paths(temp_dir, 'nvim', 'site', 'pack')
+local install_path = join_paths(package_root, 'packer', 'start', 'packer.nvim')
+local compile_path = join_paths(install_path, 'plugin', 'packer_compiled.lua')
 
 local function load_plugins()
   require('packer').startup {
@@ -12,7 +24,7 @@ local function load_plugins()
     },
     config = {
       package_root = package_root,
-      compile_path = install_path .. '/plugin/packer_compiled.lua',
+      compile_path = compile_path,
     },
   }
 end
@@ -46,10 +58,10 @@ _G.load_config = function()
     buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-    buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+    buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+    buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+    buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   end
 
   -- Add the server that troubles you here
