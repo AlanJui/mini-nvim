@@ -5,6 +5,14 @@ CONFIG_DIR = HOME .. "/.config/" .. MY_VIM
 RUNTIME_DIR = HOME .. "/.local/share/" .. MY_VIM
 
 ------------------------------------------------------------------------------
+local on_windows = vim.loop.os_uname().version:match("Windows")
+local function join_paths(...)
+	local path_sep = on_windows and "\\" or "/"
+	local result = table.concat({ ... }, path_sep)
+	return result
+end
+
+------------------------------------------------------------------------------
 -- Initial RTP (Run Time Path) environment
 -- 設定 RTP ，要求 Neovim 啟動時的設定作業、執行作業，不採預設。
 -- 故 my-nvim 的設定檔，可置於目錄： ~/.config/my-nvim/ 運行；
@@ -29,13 +37,6 @@ local function setup_rtp()
 	vim.cmd([[let &packpath = &runtimepath]])
 end
 
-local on_windows = vim.loop.os_uname().version:match("Windows")
-local function join_paths(...)
-	local path_sep = on_windows and "\\" or "/"
-	local result = table.concat({ ... }, path_sep)
-	return result
-end
-
 --------------------------------------------------------------------------------------
 vim.cmd([[set runtimepath=$VIMRUNTIME]])
 setup_rtp()
@@ -50,7 +51,11 @@ local compile_path = join_paths(install_path, "plugin", "packer_compiled.lua")
 
 local function load_plugins()
 	require("packer").startup({
-		{ "wbthomason/packer.nvim", "neovim/nvim-lspconfig" },
+		{ 
+			"wbthomason/packer.nvim", 
+			"neovim/nvim-lspconfig",
+			"tpope/vim-commentary",
+		},
 		config = { package_root = package_root, compile_path = compile_path },
 	})
 end
