@@ -2,7 +2,7 @@
 export MY_NVIM="mini-nvim"
 export MY_CONFIG_DIR="$HOME/.config/$MY_NVIM"
 export MY_RUNTIME_DIR="$HOME/.local/share/$MY_NVIM"
-# export DEBUG=false
+export DEBUG=true
 
 export XDG_CACHE_HOME="$HOME/.cache/$MY_NVIM"
 
