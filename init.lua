@@ -1,135 +1,121 @@
-MY_VIM = "mini-nvim"
-HOME = os.getenv("HOME")
+------------------------------------------------------------------------------
+-- Initial Neovim environment
+-- 初始階段
+------------------------------------------------------------------------------
+local my_nvim = os.getenv("MY_NVIM") or "nvim"
+local is_debug = os.getenv("DEBUG") or false
 
-CONFIG_DIR = HOME .. "/.config/" .. MY_VIM
-RUNTIME_DIR = HOME .. "/.local/share/" .. MY_VIM
+local home_dir = os.getenv("HOME")
+local config_dir = home_dir .. "/.config/" .. my_nvim
+local runtime_dir = home_dir .. "/.local/share/" .. my_nvim
+local cache_dir = home_dir .. "/.cache/" .. my_nvim
 
 ------------------------------------------------------------------------------
-local on_windows = vim.loop.os_uname().version:match("Windows")
-local function join_paths(...)
-	local path_sep = on_windows and "\\" or "/"
-	local result = table.concat({ ... }, path_sep)
-	return result
-end
-
-------------------------------------------------------------------------------
--- Initial RTP (Run Time Path) environment
+-- Setup Neovim Run Time Path
 -- 設定 RTP ，要求 Neovim 啟動時的設定作業、執行作業，不採預設。
 -- 故 my-nvim 的設定檔，可置於目錄： ~/.config/my-nvim/ 運行；
 -- 執行作業（Run Time）所需使用之擴充套件（Plugins）與 LSP Servers
 -- 可置於目錄： ~/.local/share/my-nvim/
 ------------------------------------------------------------------------------
-local function setup_rtp()
-	-- 變更 stdpath('config') 預設的 rtp : ~/.config/nvim/
+local function join_paths(...)
+	local PATH_SEPERATOR = vim.loop.os_uname().version:match("Windows") and "\\" or "/"
+	local result = table.concat({ ... }, PATH_SEPERATOR)
+	return result
+end
+
+local function print_rtp()
+	print("-----------------------------------------------------------")
+	-- P(vim.api.nvim_list_runtime_paths())
+	local rtp_table = vim.opt.runtimepath:get()
+	for k, v in pairs(rtp_table) do
+		print("key = ", k, "    value = ", v)
+	end
+end
+
+local function setup_run_time_environment()
+	-- 變更kstdpath('config') 預設的 rtp : ~/.config/nvim/
 	vim.opt.rtp:remove(join_paths(vim.fn.stdpath("data"), "site"))
 	vim.opt.rtp:remove(join_paths(vim.fn.stdpath("data"), "site", "after"))
-	vim.opt.rtp:prepend(join_paths(RUNTIME_DIR, "site"))
-	vim.opt.rtp:append(join_paths(RUNTIME_DIR, "site", "after"))
+	vim.opt.rtp:prepend(join_paths(runtime_dir, "site"))
+	vim.opt.rtp:append(join_paths(runtime_dir, "site", "after"))
 
 	-- 變更 stdpath('data') 預設的 rtp : ~/.local/share/my-nvim/
 	vim.opt.rtp:remove(vim.fn.stdpath("config"))
 	vim.opt.rtp:remove(join_paths(vim.fn.stdpath("config"), "after"))
-	vim.opt.rtp:prepend(CONFIG_DIR)
-	vim.opt.rtp:append(join_paths(CONFIG_DIR, "after"))
+	vim.opt.rtp:prepend(config_dir)
+	vim.opt.rtp:append(join_paths(config_dir, "after"))
 
 	-- 引用 rpt 設定 package path （即擴充擴件(plugins)的安裝路徑）
-	-- 此設定需正確，指令：requitre('<PluginName>') 才能正常執行。
+	-- 此設定需正確，指令：require('<PluginName>') 才能正常執行。
 	vim.cmd([[let &packpath = &runtimepath]])
+
+	-- Change cahche dir
+	vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
 end
 
---------------------------------------------------------------------------------------
-vim.cmd([[set runtimepath=$VIMRUNTIME]])
-setup_rtp()
+-------------------------------------------------------------------------------
+-- 插件管理器安裝及載入作業
+-------------------------------------------------------------------------------
+local lazy_dir = runtime_dir .. "/lazy"
+local lazypath = lazy_dir .. "/lazy.nvim"
 
-local temp_dir = vim.loop.os_getenv("TEMP") or "/tmp"
-
-vim.cmd("set packpath=" .. join_paths(temp_dir, "nvim", "site"))
-
-local package_root = join_paths(temp_dir, "nvim", "site", "pack")
-local install_path = join_paths(package_root, "packer", "start", "packer.nvim")
-local compile_path = join_paths(install_path, "plugin", "packer_compiled.lua")
-
-local function load_plugins()
-	require("packer").startup({
-		{ 
-			"wbthomason/packer.nvim", 
-			"neovim/nvim-lspconfig",
-			"tpope/vim-commentary",
-		},
-		config = { package_root = package_root, compile_path = compile_path },
-	})
-end
-
-_G.load_config = function()
-	vim.lsp.set_log_level("trace")
-	if vim.fn.has("nvim-0.5.1") == 1 then
-		require("vim.lsp.log").set_format_func(vim.inspect)
-	end
-	local nvim_lsp = require("lspconfig")
-	local on_attach = function(_, bufnr)
-		local function buf_set_keymap(...)
-			vim.api.nvim_buf_set_keymap(bufnr, ...)
-		end
-		local function buf_set_option(...)
-			vim.api.nvim_buf_set_option(bufnr, ...)
-		end
-
-		buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
-		-- Mappings.
-		local opts = { noremap = true, silent = true }
-		buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-		buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
-		buf_set_keymap("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
-		buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-		buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-		buf_set_keymap("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-		buf_set_keymap("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-		buf_set_keymap("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
-		buf_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-		buf_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-		buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-		buf_set_keymap("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-		buf_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
-		buf_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
-		buf_set_keymap("n", "<space>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
-	end
-
-	-- Add the server that troubles you here
-	local name = "pyright"
-	local cmd = { "pyright-langserver", "--stdio" } -- needed for elixirls, omnisharp, sumneko_lua
-	if not name then
-		print("You have not defined a server name, please edit minimal_init.lua")
-	end
-	if not nvim_lsp[name].document_config.default_config.cmd and not cmd then
-		print([[You have not defined a server default cmd for a server
-		that requires it please edit minimal_init.lua]])
-	end
-
-	nvim_lsp[name].setup({ cmd = cmd, on_attach = on_attach })
-
-	print(
-	[[You can find your log at $HOME/.cache/nvim/lsp.log. Please paste in a github issue under a details tag as described in the issue template.]]
-	)
-end
-
-if vim.fn.isdirectory(install_path) == 0 then
+if vim.fn.isdirectory(lazypath) == 0 then
+	vim.notify("  Installing lazy...", vim.log.levels.INFO, { title = "lazy.nvim" })
 	vim.fn.system({
 		"git",
 		"clone",
-		"https://github.com/wbthomason/packer.nvim",
-		install_path,
+		"https://github.com/folke/lazy.nvim.git",
+		lazypath,
 	})
-	load_plugins()
-	require("packer").sync()
-	vim.cmd([[autocmd User PackerComplete ++once lua load_config()]])
-else
-	load_plugins()
-	require("packer").sync()
-	_G.load_config()
 end
 
--- Use solarized8_flat color scheme when first time start 
--- vim.cmd([[ colorscheme solarized8_flat ]])
-vim.cmd([[ colorscheme gruvbox ]])
+vim.opt.runtimepath:prepend(lazypath)
 
+local status_ok, lazy = pcall(require, "lazy")
+if not status_ok then
+	return
+end
+
+vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
+
+local opts = {
+	root = lazy_dir,
+	install = {
+		-- install missing plugins on startup. This doesn't increase startup time.
+		missing = true,
+		-- try to load one of these colorschemes when starting an installation during startup
+		colorscheme = { "gruvbox", "onedark" },
+	},
+	lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json", -- lockfile generated after running update.
+}
+
+lazy.setup("plugins", opts)
+
+-------------------------------------------------------------------------------
+-- Main Program
+-------------------------------------------------------------------------------
+
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- 設定 Neovim 的執行環境
+if my_nvim ~= "nvim" then
+	-- 在「除錯」作業時，顯示 setup_rtp() 執行前、後， rtp 的設定內容。
+	if is_debug then
+		-- before RTP is changed
+		print_rtp()
+		-- show current cache path
+		print("Cache path:", vim.fn.stdpath("cache"))
+		-- change Neovm default RTP
+		setup_run_time_environment()
+		-- after new RTP is setuped
+		print_rtp() -- Check if the cache directory was updated successfully
+		print("Cache path:", vim.fn.stdpath("cache"))
+	else
+		-- change Neovm default RTP
+		setup_run_time_environment()
+	end
+end
+
+require("config")
+require("plugins-loader")
