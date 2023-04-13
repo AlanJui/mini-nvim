@@ -152,6 +152,20 @@ require("plugins-loader")
 --   print_rtp()
 -- end
 
+-----------------------------------------------------------
+-- Setup colorscheme
+-- 設定作業環境配色
+-----------------------------------------------------------
+local name = "nightly"
+
+local theme_ok = pcall(vim.cmd.colorscheme, name)
+if not theme_ok then
+  vim.notify("The theme isn't installed or you had a typo", vim.log.levels.ERROR)
+  -- vim.cmd.colorscheme("habamax")
+  vim.cmd.colorscheme("gruvbox")
+else
+  require("plugins.colorscheme." .. name)
+end
 ----------------------------------------------------------------------------
 -- configurations
 ----------------------------------------------------------------------------

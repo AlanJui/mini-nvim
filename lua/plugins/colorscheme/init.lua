@@ -1,14 +1,23 @@
 return {
   {
+    "bluz71/vim-nightfly-colors",
+    name = "nightfly",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd([[colorscheme nightfly]])
+    end,
+  },
+  {
     "folke/styler.nvim",
     event = "VeryLazy",
     config = function()
-      require("styler").setup {
+      require("styler").setup({
         themes = {
           markdown = { colorscheme = "gruvbox" },
           help = { colorscheme = "gruvbox" },
         },
-      }
+      })
     end,
   },
   {
@@ -24,7 +33,7 @@ return {
       },
     },
     config = function(_, opts)
-      local tokyonight = require "tokyonight"
+      local tokyonight = require("tokyonight")
       tokyonight.setup(opts)
       tokyonight.load()
     end,

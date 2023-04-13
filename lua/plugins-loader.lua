@@ -24,16 +24,21 @@ if not status_ok then
 end
 
 lazy.setup({
-  root = lazy_dir,
   spec = {
     { import = "plugins" },
+    { import = "plugins.extras.lang" },
+    { import = "plugins.extras.db" },
+    { import = "plugins.extras.ui" },
+    { import = "plugins.extras.pde" },
+    { import = "plugins.extras.pde.notes" },
   },
+  root = lazy_dir,
   install = {
     -- install missing plugins on startup. This doesn't increase startup time.
     missing = true,
     -- try to load one of these colorschemes when starting an installation during startup
     colorscheme = { "gruvbox", "onedark" },
   },
-  lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json", -- lockfile generated after running update.
+  lockfile = runtime_dir .. "/lazy-lock.json", -- lockfile generated after running update.
 })
 vim.keymap.set("n", "<leader>zz", "<cmd>:Lazy<cr>", { desc = "Manage Plugins" })
