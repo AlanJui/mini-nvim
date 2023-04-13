@@ -2,7 +2,8 @@
 -- Initial environments for Neovim
 -- 初始階段
 ------------------------------------------------------------------------------
-local my_nvim = os.getenv("MY_NVIM") or "nvim"
+-- local my_nvim = os.getenv("MY_NVIM") or "nvim"
+local my_nvim = os.getenv("NVIM_APPNAME") or ""
 local is_debug = os.getenv("DEBUG") or false
 
 local home_dir = os.getenv("HOME")
@@ -42,6 +43,8 @@ local function setup_run_time_environment()
   -- vim.opt.rtp:append(join_paths(runtime_dir, "site", "after"))
 
   -- 變更 stdpath('data') 預設的 rtp : ~/.local/share/my-nvim/
+  vim.opt.rtp:prepend(runtime_dir)
+
   vim.opt.rtp:remove(vim.fn.stdpath("config"))
   vim.opt.rtp:remove(join_paths(vim.fn.stdpath("config"), "after"))
   vim.opt.rtp:prepend(config_dir)
@@ -52,7 +55,7 @@ local function setup_run_time_environment()
   vim.cmd([[let &packpath = &runtimepath]])
 
   -- Change cahche dir
-  vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
+  -- vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
 end
 
 ---------------------------------------------------------------------

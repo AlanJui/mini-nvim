@@ -3,17 +3,18 @@
 -- 初始階段
 ------------------------------------------------------------------------------
 local is_debug = os.getenv("DEBUG") or false
-local my_nvim = os.getenv("MY_NVIM") or "nvim"
+local nvim_appname = os.getenv("NVIM_APPNAME") or ""
+local my_nvim = nvim_appname
+
+-- local config_dir = os.getenv("XDG_CONFIG_HOME")
+-- local runtime_dir = os.getenv("XDG_DATA_HOME")
+-- local cache_dir = os.getenv("XDG_CACHE_HOME")
+
+-- local my_nvim = os.getenv("MY_NVIM") or "nvim"
 local home_dir = os.getenv("HOME")
-
--- local config_dir = home_dir .. "/.config/" .. my_nvim
--- local runtime_dir = home_dir .. "/.local/share/" .. my_nvim
--- local cache_dir = home_dir .. "/.cache/" .. my_nvim
-
-local nvim_appname = os.getenv("NVIM_APPNAME") or "nvim"
-local config_dir = os.getenv("XDG_CONFIG_HOME")
-local runtime_dir = os.getenv("XDG_DATA_HOME")
-local cache_dir = os.getenv("XDG_CACHE_HOME")
+local config_dir = home_dir .. "/.config/" .. my_nvim
+local runtime_dir = home_dir .. "/.local/share/" .. my_nvim
+local cache_dir = home_dir .. "/.cache/" .. my_nvim
 
 local lazy_dir = runtime_dir .. "/lazy"
 local lazypath = lazy_dir .. "/lazy.nvim"
@@ -59,6 +60,8 @@ local function setup_run_time_environment()
   -- vim.opt.rtp:append(join_paths(runtime_dir, "site", "after"))
 
   -- 變更 stdpath('data') 預設的 rtp : ~/.local/share/my-nvim/
+  vim.opt.rtp:prepend(runtime_dir)
+
   vim.opt.rtp:remove(vim.fn.stdpath("config"))
   vim.opt.rtp:remove(join_paths(vim.fn.stdpath("config"), "after"))
   vim.opt.rtp:prepend(config_dir)
@@ -194,8 +197,11 @@ local function nvim_env_info() -- luacheck: ignore
   print(string.format("OS = %s", nvim_config["os"]))
   print(string.format("Working Directory: %s", vim.fn.getcwd()))
   print("Configurations path: " .. nvim_config["config"])
+  print("stdpath('config') = " .. vim.fn.stdpath("config"))
   print("Run Time Path: " .. nvim_config["runtime"])
-  print("Cache path:", vim.fn.stdpath("cache"))
+  print("stdpath('data') = " .. vim.fn.stdpath("data"))
+  print("Cache path:", cache_dir)
+  print("stdpath('cache') = " .. vim.fn.stdpath("cache"))
   print(string.format("Plugins management installed path: %s", nvim_config.install_path))
   print("path of all snippets")
   _G.PrintTableWithIndent(nvim_config["snippets"], 4)
@@ -241,7 +247,7 @@ end
 -- 除錯用工具
 -----------------------------------------------------------
 
--- nvim_env_info()
+nvim_env_info()
 -- show_current_working_dir()
 -- debugpy_info()
 -- nodejs_info()
