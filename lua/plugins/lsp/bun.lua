@@ -12,7 +12,7 @@ local function is_bun_server(name)
 end
 
 local function is_bun_available()
-  local bunx = vim.fn.executable("bunx")
+  local bunx = vim.fn.executable "bunx"
   if bunx == 0 then
     return false
   end

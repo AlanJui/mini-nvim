@@ -76,23 +76,23 @@ end
 -- Main Program
 -------------------------------------------------------------------------------
 
--- 設定 Neovim 的執行環境
-if is_debug then
-  -- 在「除錯」作業時，顯示 setup_rtp() 執行前、後， rtp 的設定內容。
-  -- before RTP is changed
-  print_rtp()
-  -- show current cache path
-  print("Cache path:", vim.fn.stdpath("cache"))
-end
-
--- change Neovm default RTP
-setup_run_time_environment()
-
-if is_debug then
-  -- after new RTP is setuped
-  print_rtp() -- Check if the cache directory was updated successfully
-  print("Cache path:", vim.fn.stdpath("cache"))
-end
+-- -- 設定 Neovim 的執行環境
+-- if is_debug then
+--   -- 在「除錯」作業時，顯示 setup_rtp() 執行前、後， rtp 的設定內容。
+--   -- before RTP is changed
+--   print_rtp()
+--   -- show current cache path
+--   print("Cache path:", vim.fn.stdpath("cache"))
+-- end
+--
+-- -- change Neovm default RTP
+-- setup_run_time_environment()
+--
+-- if is_debug then
+--   -- after new RTP is setuped
+--   print_rtp() -- Check if the cache directory was updated successfully
+--   print("Cache path:", vim.fn.stdpath("cache"))
+-- end
 
 -------------------------------------------------------------------------------
 -- Neovim 執行環境設定作業
@@ -138,34 +138,37 @@ require("config.keymaps")
 --  ①  若擴充套件管理器：packer.nvim 尚未安裝，執行下載及安裝作業；
 --  ②  透過擴充套件管理器，執行擴充套件 (plugins) 之載入／安裝作業。
 ------------------------------------------------------------------------------
-require("plugins-loader")
+require("config")
+require("config.lazy")
+-- require("plugins-loader")
 
 ------------------------------------------------------------------------------
 -- (2) 載入各擴充套件之設定
 -- Setup configuration of plugins
 -- 對已載入之各擴充套件，進行設定作業
 ------------------------------------------------------------------------------
--- setup_run_time_environment()
+setup_run_time_environment()
+if is_debug then
+  print("config module loaded!!")
+  print_rtp()
+end
 -- require("plugins-rc")
--- if is_debug then
---   print("config module loaded!!")
---   print_rtp()
--- end
 
 -----------------------------------------------------------
 -- Setup colorscheme
 -- 設定作業環境配色
 -----------------------------------------------------------
-local name = "nightly"
+-- local name = "nightly"
+--
+-- local theme_ok = pcall(vim.cmd.colorscheme, name)
+-- if not theme_ok then
+--   vim.notify("The theme isn't installed or you had a typo", vim.log.levels.ERROR)
+--   -- vim.cmd.colorscheme("habamax")
+--   vim.cmd.colorscheme("gruvbox")
+-- else
+--   require("plugins.colorscheme." .. name)
+-- end
 
-local theme_ok = pcall(vim.cmd.colorscheme, name)
-if not theme_ok then
-  vim.notify("The theme isn't installed or you had a typo", vim.log.levels.ERROR)
-  -- vim.cmd.colorscheme("habamax")
-  vim.cmd.colorscheme("gruvbox")
-else
-  require("plugins.colorscheme." .. name)
-end
 ----------------------------------------------------------------------------
 -- configurations
 ----------------------------------------------------------------------------

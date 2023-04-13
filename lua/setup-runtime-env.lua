@@ -18,12 +18,13 @@ local function join_paths(...)
 end
 
 local function print_rtp()
-  print("-----------------------------------------------------------")
+  print("===========================================================")
   -- P(vim.api.nvim_list_runtime_paths())
   local rtp_table = vim.opt.runtimepath:get()
   for k, v in pairs(rtp_table) do
     print("key = ", k, "    value = ", v)
   end
+  print("-----------------------------------------------------------")
 end
 
 ------------------------------------------------------------------------------
@@ -37,8 +38,8 @@ local function setup_run_time_environment()
   -- 變更kstdpath('config') 預設的 rtp : ~/.config/nvim/
   vim.opt.rtp:remove(join_paths(vim.fn.stdpath("data"), "site"))
   vim.opt.rtp:remove(join_paths(vim.fn.stdpath("data"), "site", "after"))
-  vim.opt.rtp:prepend(join_paths(runtime_dir, "site"))
-  vim.opt.rtp:append(join_paths(runtime_dir, "site", "after"))
+  -- vim.opt.rtp:prepend(join_paths(runtime_dir, "site"))
+  -- vim.opt.rtp:append(join_paths(runtime_dir, "site", "after"))
 
   -- 變更 stdpath('data') 預設的 rtp : ~/.local/share/my-nvim/
   vim.opt.rtp:remove(vim.fn.stdpath("config"))

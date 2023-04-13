@@ -1,7 +1,7 @@
 local M = {}
 
-local lsp_utils = require("plugins.lsp.utils")
-local icons = require("config.icons")
+local lsp_utils = require "plugins.lsp.utils"
+local icons = require "config.icons"
 
 local function lsp_init()
   local signs = {
@@ -87,7 +87,7 @@ function M.setup(_, opts)
   end
 
   -- Add bun for Node.js-based servers
-  local lspconfig_util = require("lspconfig.util")
+  local lspconfig_util = require "lspconfig.util"
   local add_bun_prefix = require("plugins.lsp.bun").add_bun_prefix
   lspconfig_util.on_setup = lspconfig_util.add_hook_before(lspconfig_util.on_setup, add_bun_prefix)
 
@@ -112,8 +112,8 @@ function M.setup(_, opts)
   end
 
   if have_mason then
-    mlsp.setup({ ensure_installed = ensure_installed })
-    mlsp.setup_handlers({ setup })
+    mlsp.setup { ensure_installed = ensure_installed }
+    mlsp.setup_handlers { setup }
   end
 end
 

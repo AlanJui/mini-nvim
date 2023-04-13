@@ -4,12 +4,9 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-      {
-        "folke/neodev.nvim",
-        opts = {
-          library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
-        },
-      },
+      { "folke/neodev.nvim", opts = {
+        library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
+      } },
       { "j-hui/fidget.nvim", config = true },
       { "smjonas/inc-rename.nvim", config = true },
       "williamboman/mason.nvim",
@@ -38,7 +35,7 @@ return {
       },
       setup = {
         lua_ls = function(_, _)
-          local lsp_utils = require("plugins.lsp.utils")
+          local lsp_utils = require "plugins.lsp.utils"
           lsp_utils.on_attach(function(client, buffer)
             -- stylua: ignore
             if client.name == "lua_ls" then
@@ -67,7 +64,7 @@ return {
     },
     config = function(_, opts)
       require("mason").setup()
-      local mr = require("mason-registry")
+      local mr = require "mason-registry"
       for _, tool in ipairs(opts.ensure_installed) do
         local p = mr.get_package(tool)
         if not p:is_installed() then
@@ -81,21 +78,18 @@ return {
     event = "BufReadPre",
     dependencies = { "mason.nvim" },
     config = function()
-      local nls = require("null-ls")
-      nls.setup({
+      local nls = require "null-ls"
+      nls.setup {
         sources = {
           nls.builtins.formatting.stylua,
           nls.builtins.formatting.black,
           nls.builtins.formatting.shfmt,
-          nls.builtins.diagnostics.ruff.with({ extra_args = { "--max-line-length=180" } }),
+          nls.builtins.diagnostics.ruff.with { extra_args = { "--max-line-length=180" } },
         },
-      })
+      }
     end,
   },
-  {
-    "jay-babu/mason-null-ls.nvim",
-    opts = { ensure_installed = nil, automatic_installation = true, automatic_setup = false },
-  },
+  { "jay-babu/mason-null-ls.nvim", opts = { ensure_installed = nil, automatic_installation = true, automatic_setup = false } },
   {
     "utilyre/barbecue.nvim",
     event = "VeryLazy",

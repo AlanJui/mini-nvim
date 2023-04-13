@@ -173,96 +173,38 @@ return {
 		cmd = "Telescope",
 		-- stylua: ignore
 		keys = {
-			{
-				"<leader><space>",
-				require("utils").find_files,
-				desc =
-				"Find Files"
-			},
-			{
-				"<leader>ff",
-				require("utils").find_files,
-				desc =
-				"Find Files"
-			},
-			{
-				"<leader>fo",
-				"<cmd>Telescope frecency theme=dropdown previewer=false<cr>",
-				desc =
-				"Recent"
-			},
-			{
-				"<leader>fb",
-				"<cmd>Telescope buffers<cr>",
-				desc =
-				"Buffers"
-			},
-			{
-				"<leader>fr",
-				"<cmd>Telescope file_browser<cr>",
-				desc =
-				"Browser"
-			},
-			{
-				"<leader>gc",
-				"<cmd>Telescope conventional_commits<cr>",
-				desc =
-				"Conventional Commits"
-			},
-			{
-				"<leader>zs",
-				"<cmd>Telescope lazy<cr>",
-				desc =
-				"Search Plugins"
-			},
-			{
-				"<leader>ps",
-				"<cmd>Telescope repo list<cr>",
-				desc =
-				"Search"
-			},
-			{
-				"<leader>hs",
-				"<cmd>Telescope help_tags<cr>",
-				desc =
-				"Search"
-			},
-			{
-				"<leader>pp",
-				function() require("telescope").extensions.project.project { display_type = "minimal" } end,
-				desc =
-				"List",
-			},
-			{
-				"<leader>sw",
-				"<cmd>Telescope live_grep<cr>",
-				desc =
-				"Workspace"
-			},
-			{
-				"<leader>ss",
-				"<cmd>Telescope luasnip<cr>",
-				desc =
-				"Snippets"
-			},
-			{
-				"<leader>sb",
-				function() require("telescope.builtin").current_buffer_fuzzy_find() end,
-				desc =
-				"Buffer",
-			},
-			{
-				"<leader>vo",
-				"<cmd>Telescope aerial<cr>",
-				desc =
-				"Code Outline"
-			},
-			{
-				"<leader>zc",
-				function() require("telescope.builtin").colorscheme({ enable_preview = true }) end,
-				desc =
-				"Colorscheme",
-			},
+			{ "<leader><space>", require("utils").find_files,                                                                 desc =
+			"Find Files" },
+			{ "<leader>ff",      require("utils").find_files,                                                                 desc =
+			"Find Files" },
+			{ "<leader>fo",      "<cmd>Telescope frecency theme=dropdown previewer=false<cr>",                                desc =
+			"Recent" },
+			{ "<leader>fb",      "<cmd>Telescope buffers<cr>",                                                                desc =
+			"Buffers" },
+			{ "<leader>fr",      "<cmd>Telescope file_browser<cr>",                                                           desc =
+			"Browser" },
+			{ "<leader>gc",      "<cmd>Telescope conventional_commits<cr>",                                                   desc =
+			"Conventional Commits" },
+			{ "<leader>zs",      "<cmd>Telescope lazy<cr>",                                                                   desc =
+			"Search Plugins" },
+			{ "<leader>ps",      "<cmd>Telescope repo list<cr>",                                                              desc =
+			"Search" },
+			{ "<leader>hs",      "<cmd>Telescope help_tags<cr>",                                                              desc =
+			"Search" },
+			{ "<leader>pp",      function() require("telescope").extensions.project.project { display_type = "minimal" } end,
+				                                                                                                                  desc =
+				"List", },
+			{ "<leader>sw",      "<cmd>Telescope live_grep<cr>",                                                              desc =
+			"Workspace" },
+			{ "<leader>ss",      "<cmd>Telescope luasnip<cr>",                                                                desc =
+			"Snippets" },
+			{ "<leader>sb",      function() require("telescope.builtin").current_buffer_fuzzy_find() end,                     desc =
+			"Buffer", },
+			{ "<leader>vo",      "<cmd>Telescope aerial<cr>",                                                                 desc =
+			"Code Outline" },
+			{ "<leader>zc",      function() require("telescope.builtin").colorscheme({ enable_preview = true }) end,
+				                                                                                                                  desc =
+				"Colorscheme", },
 		},
 		config = function(_, _)
 			local telescope = require "telescope"
@@ -309,7 +251,7 @@ return {
 					-- Open file browser
 					-- vim.cmd("Telescope file_browser select_buffer=true path=" .. vim.fs.dirname(full_path))
 					require("telescope").extensions.file_browser.file_browser { select_buffer = true, path = vim.fs.dirname(
-						full_path) }
+					full_path) }
 				end,
 			}
 
