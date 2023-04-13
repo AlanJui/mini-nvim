@@ -67,14 +67,15 @@ if is_debug then
   print_rtp()
   -- show current cache path
   print("Cache path:", vim.fn.stdpath("cache"))
-  -- change Neovm default RTP
-  setup_run_time_environment()
+end
+
+-- change Neovm default RTP
+setup_run_time_environment()
+
+if is_debug then
   -- after new RTP is setuped
   print_rtp() -- Check if the cache directory was updated successfully
   print("Cache path:", vim.fn.stdpath("cache"))
-else
-  -- change Neovm default RTP
-  setup_run_time_environment()
 end
 
 -------------------------------------------------------------------------------
@@ -130,7 +131,6 @@ require("plugins-loader")
 -- 對已載入之各擴充套件，進行設定作業
 ------------------------------------------------------------------------------
 setup_run_time_environment()
--- require("config.plugins-rc")
 require("plugins-rc")
 if is_debug then
   print("config module loaded!!")

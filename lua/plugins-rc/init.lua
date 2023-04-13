@@ -3,12 +3,12 @@
 -- 載入各擴充套件(plugins) 的設定
 -----------------------------------------------------------
 -- Lua initialization file
-vim.cmd([[colorscheme nightfly]])
+-- vim.cmd([[colorscheme nightfly]])
 -- Load Which-key
 -- 提供【選單】式的指令操作
-require("plugins-rc.which-key")
+-- require("plugins-rc.which-key")
 -- Neovim kernel
-require("plugins-rc.nvim-treesitter")
+-- require("plugins-rc.nvim-treesitter")
 
 -- lsp
 -- require("lsp")
@@ -34,7 +34,7 @@ require("plugins-rc.nvim-ufo-rc")
 require("plugins-rc.undotree")
 require("plugins-rc.trim-nvim")
 require("plugins-rc.autopairs")
-require("plugins-rc.nvim-ts-autotag")
+-- require("plugins-rc.nvim-ts-autotag")
 vim.cmd([[runtime lua.plugins-rc.vim-surround.rc.vim]])
 vim.cmd([[runtime lua.plugins-rc.tagalong-vim.rc.vim]])
 
