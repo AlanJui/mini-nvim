@@ -1,12 +1,10 @@
 -- Install plugins manager
---    https://github.com/folke/lazy.nvim
---    `:help lazy.nvim.txt` for more info
-local my_nvim = os.getenv("MY_NVIM") or "nvim"
-local home_dir = os.getenv("HOME")
-local runtime_dir = home_dir .. "/.local/share/" .. my_nvim
-
+-- https://github.com/folke/lazy.nvim
+-- `:help lazy.nvim.txt` for more info
+-- local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+local runtime_dir = os.getenv("XDG_DATA_HOME")
 local lazy_dir = runtime_dir .. "/lazy"
-local lazypath = lazy_dir .. "/lazy.nvim"
+local lazypath = lazy_dir .. "/lazy"
 
 if vim.fn.isdirectory(lazypath) == 0 then
   vim.notify("  Installing lazy...", vim.log.levels.INFO, { title = "lazy.nvim" })
@@ -25,10 +23,11 @@ if not status_ok then
   return
 end
 
-vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
-
-local opts = {
+lazy.setup({
   root = lazy_dir,
+  spec = {
+    { import = "plugins" },
+  },
   install = {
     -- install missing plugins on startup. This doesn't increase startup time.
     missing = true,
@@ -36,6 +35,5 @@ local opts = {
     colorscheme = { "gruvbox", "onedark" },
   },
   lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json", -- lockfile generated after running update.
-}
-
-lazy.setup("plugins", opts)
+})
+vim.keymap.set("n", "<leader>zz", "<cmd>:Lazy<cr>", { desc = "Manage Plugins" })

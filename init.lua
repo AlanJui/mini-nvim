@@ -2,16 +2,31 @@
 -- Initial Neovim environment
 -- 初始階段
 ------------------------------------------------------------------------------
-local my_nvim = os.getenv("MY_NVIM") or "nvim"
 local is_debug = os.getenv("DEBUG") or false
-
+local my_nvim = os.getenv("MY_NVIM") or "nvim"
 local home_dir = os.getenv("HOME")
-local config_dir = home_dir .. "/.config/" .. my_nvim
-local runtime_dir = home_dir .. "/.local/share/" .. my_nvim
-local cache_dir = home_dir .. "/.cache/" .. my_nvim
+
+-- local config_dir = home_dir .. "/.config/" .. my_nvim
+-- local runtime_dir = home_dir .. "/.local/share/" .. my_nvim
+-- local cache_dir = home_dir .. "/.cache/" .. my_nvim
+
+local nvim_appname = os.getenv("NVIM_APPNAME") or "nvim"
+local config_dir = os.getenv("XDG_CONFIG_HOME")
+local runtime_dir = os.getenv("XDG_DATA_HOME")
+local cache_dir = os.getenv("XDG_CACHE_HOME")
 
 local lazy_dir = runtime_dir .. "/lazy"
 local lazypath = lazy_dir .. "/lazy.nvim"
+
+if is_debug then
+  print(string.format("nvim_appname = %s", nvim_appname))
+  print(string.format("my_nvim = %s", my_nvim))
+  print(string.format("config_dir = %s", config_dir))
+  print(string.format("runtime_dir = %s", runtime_dir))
+  print(string.format("cache_dir = %s", cache_dir))
+  print(string.format("lazy_dir = %s", lazy_dir))
+  print(string.format("lazypath = %s", lazypath))
+end
 
 ------------------------------------------------------------------------------
 -- Setup Neovim Run Time Path
@@ -33,14 +48,15 @@ local function print_rtp()
   for k, v in pairs(rtp_table) do
     print("key = ", k, "    value = ", v)
   end
+  print("===========================================================")
 end
 
 local function setup_run_time_environment()
   -- 變更kstdpath('config') 預設的 rtp : ~/.config/nvim/
   vim.opt.rtp:remove(join_paths(vim.fn.stdpath("data"), "site"))
   vim.opt.rtp:remove(join_paths(vim.fn.stdpath("data"), "site", "after"))
-  vim.opt.rtp:prepend(join_paths(runtime_dir, "site"))
-  vim.opt.rtp:append(join_paths(runtime_dir, "site", "after"))
+  -- vim.opt.rtp:prepend(join_paths(runtime_dir, "site"))
+  -- vim.opt.rtp:append(join_paths(runtime_dir, "site", "after"))
 
   -- 變更 stdpath('data') 預設的 rtp : ~/.local/share/my-nvim/
   vim.opt.rtp:remove(vim.fn.stdpath("config"))
@@ -53,7 +69,7 @@ local function setup_run_time_environment()
   vim.cmd([[let &packpath = &runtimepath]])
 
   -- Change cahche dir
-  vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
+  -- vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
 end
 
 -------------------------------------------------------------------------------
@@ -122,7 +138,6 @@ require("config.keymaps")
 --  ①  若擴充套件管理器：packer.nvim 尚未安裝，執行下載及安裝作業；
 --  ②  透過擴充套件管理器，執行擴充套件 (plugins) 之載入／安裝作業。
 ------------------------------------------------------------------------------
--- require("config.plugins")
 require("plugins-loader")
 
 ------------------------------------------------------------------------------
@@ -130,12 +145,12 @@ require("plugins-loader")
 -- Setup configuration of plugins
 -- 對已載入之各擴充套件，進行設定作業
 ------------------------------------------------------------------------------
-setup_run_time_environment()
-require("plugins-rc")
-if is_debug then
-  print("config module loaded!!")
-  print_rtp()
-end
+-- setup_run_time_environment()
+-- require("plugins-rc")
+-- if is_debug then
+--   print("config module loaded!!")
+--   print_rtp()
+-- end
 
 ----------------------------------------------------------------------------
 -- configurations

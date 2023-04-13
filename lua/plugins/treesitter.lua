@@ -29,9 +29,9 @@ return {
     opts = {
       sync_install = false,
       ensure_installed = {
+        -- "help",
         "bash",
         "dockerfile",
-        "help",
         "html",
         "lua",
         "luadoc",
