@@ -72,7 +72,7 @@ local function setup_run_time_environment()
   vim.cmd([[let &packpath = &runtimepath]])
 
   -- Change cahche dir
-  -- vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
+  vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
 end
 
 -------------------------------------------------------------------------------
@@ -190,9 +190,6 @@ local function nvim_env_info() -- luacheck: ignore
   -- Neovim installed info
   ----------------------------------------------------------------------------
   print("init.lua is loaded!")
-  print("Neovim RTP(Run Time Path ...)")
-  ---@diagnostic disable-next-line: undefined-field
-  _G.PrintTableWithIndent(vim.opt.runtimepath:get(), 4) -- luacheck: ignore
   print("====================================================================")
   print(string.format("OS = %s", nvim_config["os"]))
   print(string.format("Working Directory: %s", vim.fn.getcwd()))
@@ -205,6 +202,16 @@ local function nvim_env_info() -- luacheck: ignore
   print(string.format("Plugins management installed path: %s", nvim_config.install_path))
   print("path of all snippets")
   _G.PrintTableWithIndent(nvim_config["snippets"], 4)
+  print("--------------------------------------------------------------------")
+end
+
+---@diagnostic disable-next-line: unused-function, unused-local
+local function list_rtp() -- luacheck: ignore
+  ----------------------------------------------------------------------------
+  -- List all path of RTP
+  ----------------------------------------------------------------------------
+  print("Neovim RTP(Run Time Path ...)")
+  _G.PrintTableWithIndent(vim.opt.runtimepath:get(), 4) -- luacheck: ignore
   print("--------------------------------------------------------------------")
 end
 
@@ -248,6 +255,7 @@ end
 -----------------------------------------------------------
 
 nvim_env_info()
+list_rtp()
 -- show_current_working_dir()
 -- debugpy_info()
 -- nodejs_info()

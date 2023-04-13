@@ -55,7 +55,7 @@ local function setup_run_time_environment()
   vim.cmd([[let &packpath = &runtimepath]])
 
   -- Change cahche dir
-  -- vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
+  vim.loop.os_setenv("XDG_CACHE_HOME", cache_dir)
 end
 
 ---------------------------------------------------------------------
