@@ -1,0 +1,24 @@
+return {
+  -----------------------------------------------------------
+  -- Treesitter: for better syntax
+  -----------------------------------------------------------
+  -- Nvim Treesitter configurations and abstraction layer
+  {
+    "nvim-treesitter/nvim-treesitter",
+    run = ":TSUpdate",
+  },
+  -- 'nvim-treesitter/playground',
+  -- Additional textobjects for treesitter
+  -- 'nvim-treesitter/nvim-treesitter-textobjects',
+  -- vs-code like icons
+  "nvim-tree/nvim-web-devicons",
+  -- File/Flolders explorer:nvim-tree
+  {
+    "kyazdani42/nvim-tree.lua",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons", -- optional, for file icon
+    },
+  },
+  -- Screen Navigation
+  { "folke/which-key.nvim" },
+}
