@@ -76,10 +76,24 @@ local function PrintTableWithIndent(table, indent_size)
   print(tprint(table, indent_size))
 end
 
+local function print_stdpath()
+  print("====================================================================")
+  print("vim.fn.stdpath('XXX')")
+  print("====================================================================")
+  print("Configurations path: " .. config_dir)
+  print("stdpath('config') = " .. vim.fn.stdpath("config"))
+  print("--------------------------------------------------------------------")
+  print("Run Time Path: " .. runtime_dir)
+  print("stdpath('data') = " .. vim.fn.stdpath("data"))
+  print("--------------------------------------------------------------------")
+  print("Cache path:", cache_dir)
+  print("stdpath('cache') = " .. vim.fn.stdpath("cache"))
+end
+
 local function print_rtp()
-  print("===========================================================")
+  print("====================================================================")
   print("RTP Paths")
-  print("===========================================================")
+  print("====================================================================")
   -- P(vim.api.nvim_list_runtime_paths())
   local rtp_table = vim.opt.runtimepath:get()
   -- for k, v in pairs(rtp_table) do
@@ -191,7 +205,8 @@ if is_debug then
   print("===========================================================")
   print("Lazy.nvim has been installed and loaded!!")
   print("===========================================================")
-  -- print_rtp()
+  print_stdpath()
+  print_rtp()
 end
 -- require("plugins-rc")
 
@@ -232,15 +247,6 @@ local function nvim_env_info() -- luacheck: ignore
   print("====================================================================")
   print(string.format("OS = %s", nvim_config["os"]))
   print(string.format("Working Directory: %s", vim.fn.getcwd()))
-  print("--------------------------------------------------------------------")
-  print("Configurations path: " .. config_dir)
-  print("stdpath('config') = " .. vim.fn.stdpath("config"))
-  print("--------------------------------------------------------------------")
-  print("Run Time Path: " .. runtime_dir)
-  print("stdpath('data') = " .. vim.fn.stdpath("data"))
-  print("--------------------------------------------------------------------")
-  print("Cache path:", cache_dir)
-  print("stdpath('cache') = " .. vim.fn.stdpath("cache"))
   print("--------------------------------------------------------------------")
   print(string.format("Plugins management installed path: %s", nvim_config.install_path))
   print("--------------------------------------------------------------------")
@@ -302,8 +308,8 @@ end
 -- 除錯用工具
 -----------------------------------------------------------
 
-nvim_env_info()
-list_rtp()
+-- nvim_env_info()
+-- list_rtp()
 -- show_current_working_dir()
 -- debugpy_info()
 -- nodejs_info()

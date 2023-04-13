@@ -4,7 +4,8 @@
 ------------------------------------------------------------------------------
 -- local my_nvim = os.getenv("MY_NVIM") or "nvim"
 local my_nvim = os.getenv("NVIM_APPNAME") or ""
-local is_debug = os.getenv("DEBUG") or false
+-- local is_debug = os.getenv("DEBUG") or false
+local is_debug = false
 
 local home_dir = os.getenv("HOME")
 local config_dir = home_dir .. "/.config/" .. my_nvim
@@ -49,10 +50,24 @@ local function PrintTableWithIndent(table, indent_size)
   print(tprint(table, indent_size))
 end
 
+local function print_stdpath()
+  print("====================================================================")
+  print("vim.fn.stdpath('XXX')")
+  print("====================================================================")
+  print("Configurations path: " .. config_dir)
+  print("stdpath('config') = " .. vim.fn.stdpath("config"))
+  print("--------------------------------------------------------------------")
+  print("Run Time Path: " .. runtime_dir)
+  print("stdpath('data') = " .. vim.fn.stdpath("data"))
+  print("--------------------------------------------------------------------")
+  print("Cache path:", cache_dir)
+  print("stdpath('cache') = " .. vim.fn.stdpath("cache"))
+end
+
 local function print_rtp()
-  print("===========================================================")
+  print("====================================================================")
   print("RTP Paths")
-  print("===========================================================")
+  print("====================================================================")
   -- P(vim.api.nvim_list_runtime_paths())
   local rtp_table = vim.opt.runtimepath:get()
   -- for k, v in pairs(rtp_table) do
@@ -98,12 +113,14 @@ if my_nvim ~= "nvim" then
   -- 在「除錯」作業時，顯示 setup_rtp() 執行前、後， rtp 的設定內容。
   if is_debug then
     -- before RTP is changed
+    print_stdpath()
     print_rtp()
     -- show current cache path
     print("Cache path:", vim.fn.stdpath("cache"))
     -- change Neovm default RTP
     setup_run_time_environment()
     -- after new RTP is setuped
+    print_stdpath()
     print_rtp() -- Check if the cache directory was updated successfully
     print("Cache path:", vim.fn.stdpath("cache"))
   else
