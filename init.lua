@@ -20,6 +20,9 @@ local lazy_dir = runtime_dir .. "/lazy"
 local lazypath = lazy_dir .. "/lazy.nvim"
 
 if is_debug then
+  print("===========================================================")
+  print("My vars:")
+  print("===========================================================")
   print(string.format("nvim_appname = %s", nvim_appname))
   print(string.format("my_nvim = %s", my_nvim))
   print(string.format("config_dir = %s", config_dir))
@@ -42,14 +45,47 @@ local function join_paths(...)
   return result
 end
 
+local function tprint(tbl, indent)
+  if not indent then
+    indent = 0
+  end
+  local toprint = string.rep(" ", indent) .. "{\n"
+  indent = indent + 2
+  for k, v in pairs(tbl) do
+    toprint = toprint .. string.rep(" ", indent)
+    if type(k) == "number" then
+      toprint = toprint .. "[" .. k .. "] = "
+    elseif type(k) == "string" then
+      toprint = toprint .. k .. "= "
+    end
+    if type(v) == "number" then
+      toprint = toprint .. v .. ",\n"
+    elseif type(v) == "string" then
+      toprint = toprint .. '"' .. v .. '",\n'
+    elseif type(v) == "table" then
+      toprint = toprint .. tprint(v, indent + 2) .. ",\n"
+    else
+      toprint = toprint .. '"' .. tostring(v) .. '",\n'
+    end
+  end
+  toprint = toprint .. string.rep(" ", indent - 2) .. "}"
+  return toprint
+end
+
+local function PrintTableWithIndent(table, indent_size)
+  print(tprint(table, indent_size))
+end
+
 local function print_rtp()
-  print("-----------------------------------------------------------")
+  print("===========================================================")
+  print("RTP Paths")
+  print("===========================================================")
   -- P(vim.api.nvim_list_runtime_paths())
   local rtp_table = vim.opt.runtimepath:get()
-  for k, v in pairs(rtp_table) do
-    print("key = ", k, "    value = ", v)
-  end
-  print("===========================================================")
+  -- for k, v in pairs(rtp_table) do
+  --   print("key = ", k, "    value = ", v)
+  -- end
+  PrintTableWithIndent(rtp_table, 4)
 end
 
 local function setup_run_time_environment()
@@ -152,8 +188,10 @@ require("config.lazy")
 ------------------------------------------------------------------------------
 setup_run_time_environment()
 if is_debug then
-  print("config module loaded!!")
-  print_rtp()
+  print("===========================================================")
+  print("Lazy.nvim has been installed and loaded!!")
+  print("===========================================================")
+  -- print_rtp()
 end
 -- require("plugins-rc")
 
@@ -189,20 +227,25 @@ local function nvim_env_info() -- luacheck: ignore
   ----------------------------------------------------------------------------
   -- Neovim installed info
   ----------------------------------------------------------------------------
+  print("====================================================================")
   print("init.lua is loaded!")
   print("====================================================================")
   print(string.format("OS = %s", nvim_config["os"]))
   print(string.format("Working Directory: %s", vim.fn.getcwd()))
-  print("Configurations path: " .. nvim_config["config"])
+  print("--------------------------------------------------------------------")
+  print("Configurations path: " .. config_dir)
   print("stdpath('config') = " .. vim.fn.stdpath("config"))
-  print("Run Time Path: " .. nvim_config["runtime"])
+  print("--------------------------------------------------------------------")
+  print("Run Time Path: " .. runtime_dir)
   print("stdpath('data') = " .. vim.fn.stdpath("data"))
+  print("--------------------------------------------------------------------")
   print("Cache path:", cache_dir)
   print("stdpath('cache') = " .. vim.fn.stdpath("cache"))
+  print("--------------------------------------------------------------------")
   print(string.format("Plugins management installed path: %s", nvim_config.install_path))
+  print("--------------------------------------------------------------------")
   print("path of all snippets")
   _G.PrintTableWithIndent(nvim_config["snippets"], 4)
-  print("--------------------------------------------------------------------")
 end
 
 ---@diagnostic disable-next-line: unused-function, unused-local
@@ -210,9 +253,10 @@ local function list_rtp() -- luacheck: ignore
   ----------------------------------------------------------------------------
   -- List all path of RTP
   ----------------------------------------------------------------------------
+  print("====================================================================")
   print("Neovim RTP(Run Time Path ...)")
+  print("====================================================================")
   _G.PrintTableWithIndent(vim.opt.runtimepath:get(), 4) -- luacheck: ignore
-  print("--------------------------------------------------------------------")
 end
 
 ---@diagnostic disable-next-line: unused-function, unused-local
@@ -220,6 +264,9 @@ local function debugpy_info()
   ----------------------------------------------------------------------------
   -- Debugpy installed info
   ----------------------------------------------------------------------------
+  print("====================================================================")
+  print("Debugpy")
+  print("====================================================================")
   local venv = nvim_config["python"]["venv"]
   print(string.format("$VIRTUAL_ENV = %s", venv))
   local debugpy_path = nvim_config["python"]["debugpy_path"]
@@ -228,7 +275,6 @@ local function debugpy_info()
   else
     print("Debugpy isn't installed in path: " .. debugpy_path .. "yet!")
   end
-  print("--------------------------------------------------------------------")
 end
 
 ---@diagnostic disable-next-line: unused-function, unused-local
@@ -236,6 +282,9 @@ local function nodejs_info() -- luacheck: ignore
   ----------------------------------------------------------------------------
   -- vscode-js-debug installed info
   ----------------------------------------------------------------------------
+  print("====================================================================")
+  print("Node.js Environment")
+  print("====================================================================")
   print(string.format("node_path = %s", nvim_config.nodejs.node_path))
   print(string.format("vim.g.node_host_prog = %s", vim.g.node_host_prog))
   local js_debugger_path = nvim_config["nodejs"]["debugger_path"]
@@ -246,7 +295,6 @@ local function nodejs_info() -- luacheck: ignore
   end
   print(string.format("debugger_cmd = %s", ""))
   _G.PrintTableWithIndent(nvim_config.nodejs.debugger_cmd, 4)
-  print("====================================================================")
 end
 
 -----------------------------------------------------------
