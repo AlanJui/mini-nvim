@@ -4,13 +4,13 @@
 ------------------------------------------------------------------------------
 local is_debug = os.getenv("DEBUG") or false
 local nvim_appname = os.getenv("NVIM_APPNAME") or ""
-local my_nvim = nvim_appname
+-- local my_nvim = nvim_appname
 
 -- local config_dir = os.getenv("XDG_CONFIG_HOME")
 -- local runtime_dir = os.getenv("XDG_DATA_HOME")
 -- local cache_dir = os.getenv("XDG_CACHE_HOME")
 
--- local my_nvim = os.getenv("MY_NVIM") or "nvim"
+local my_nvim = os.getenv("MY_NVIM") or "nvim"
 local home_dir = os.getenv("HOME")
 local config_dir = home_dir .. "/.config/" .. my_nvim
 local runtime_dir = home_dir .. "/.local/share/" .. my_nvim

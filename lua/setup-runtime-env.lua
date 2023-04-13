@@ -2,9 +2,9 @@
 -- Initial environments for Neovim
 -- 初始階段
 ------------------------------------------------------------------------------
--- local my_nvim = os.getenv("MY_NVIM") or "nvim"
-local my_nvim = os.getenv("NVIM_APPNAME") or ""
+-- local my_nvim = os.getenv("NVIM_APPNAME") or ""
 -- local is_debug = os.getenv("DEBUG") or false
+local my_nvim = os.getenv("MY_NVIM") or "nvim"
 local is_debug = false
 
 local home_dir = os.getenv("HOME")
