@@ -121,7 +121,8 @@ require("config.keymaps")
 --  ①  若擴充套件管理器：packer.nvim 尚未安裝，執行下載及安裝作業；
 --  ②  透過擴充套件管理器，執行擴充套件 (plugins) 之載入／安裝作業。
 ------------------------------------------------------------------------------
-require("config.plugins")
+-- require("config.plugins")
+require("plugins-loader")
 
 ------------------------------------------------------------------------------
 -- (2) 載入各擴充套件之設定
@@ -129,7 +130,8 @@ require("config.plugins")
 -- 對已載入之各擴充套件，進行設定作業
 ------------------------------------------------------------------------------
 setup_run_time_environment()
-require("config.plugins-rc")
+-- require("config.plugins-rc")
+require("plugins-rc")
 if is_debug then
   print("config module loaded!!")
   print_rtp()
