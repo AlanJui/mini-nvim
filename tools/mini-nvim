@@ -1,5 +1,5 @@
 #!/bin/sh
-export DEBUG=true
+# export DEBUG=true
 
 export NVIM_APPNAME="mini-nvim"
 export XDG_CONFIG_HOME="$HOME/.config"

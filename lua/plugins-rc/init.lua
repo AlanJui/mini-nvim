@@ -6,7 +6,7 @@
 -- 提供【選單】式的指令操作
 require("plugins-rc/which-key")
 -- Neovim kernel
-require("plugins-rc/nvim-treesitter")
+-- require("plugins-rc/nvim-treesitter")
 
 -- lsp
 require("lsp")
@@ -23,7 +23,7 @@ require("plugins-rc/indent-blankline")
 -- files management
 require("plugins-rc/telescope-nvim")
 -- require("my-telescope")
-require("plugins-rc/nvim-tree")
+-- require("plugins-rc/nvim-tree")
 -- require("plugins-rc/harpoon")
 
 -- editting tools
