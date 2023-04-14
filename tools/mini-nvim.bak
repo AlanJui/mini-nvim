@@ -1,0 +1,75 @@
+#!/bin/sh
+#====================================================================
+#  曾試過的作法
+#====================================================================
+export DEBUG=true
+
+export MY_NVIM="mini-nvim"
+export MY_CONFIG_DIR="$HOME/.config/$MY_NVIM"
+export MY_RUNTIME_DIR="$HOME/.local/share/$MY_NVIM"
+
+#====================================================================
+# 使用自訂環境變數
+#====================================================================
+# exec nvim -u "$MY_CONFIG_DIR/init.lua" --cmd "luafile $MY_CONFIG_DIR/lua/setup-rtp.lua" "$@"
+#--------------------------------------------------------------------
+# exec nvim -u "$MY_CONFIG_DIR/init.lua" \
+#           --cmd "luafile $MY_CONFIG_DIR/lua/setup-runtime-env.lua" \
+#           "$@"
+#====================================================================
+
+#====================================================================
+# 使用 XDG 環境變數
+#====================================================================
+
+export XDG_CONFIG_HOME="$HOME/.config/$MY_NVIM"
+export XDG_DATA_HOME="$HOME/.local/share/$MY_NVIM"
+export XDG_CACHE_HOME="$HOME/.cache/$MY_NVIM"
+
+#====================================================================
+# XDG_DATA_HOME="$XDG_DATA_HOME" XDG_CACHE_HOME="$XDG_CACHE_HOME" XDG_CONFIG_HOME="$XDG_CONFIG_HOME" nvim -u "$XDG_CONFIG_HOME/init.lua" "$@"
+#--------------------------------------------------------------------
+# exec nvim -u "$XDG_CONFIG_HOME/init.lua" \
+#           --cmd "let &packpath = '$XDG_DATA_HOME/packpath'" \
+#           --cmd "luafile $XDG_CONFIG_HOME/lua/setup-runtime-env.lua" \
+# 					"$@"
+#--------------------------------------------------------------------
+# exec env XDG_DATA_HOME="$XDG_DATA_HOME" \
+# 	       XDG_CACHE_HOME="$XDG_CACHE_HOME" \
+# 		     XDG_CONFIG_HOME="$XDG_CONFIG_HOME" \
+# 		 nvim -u "$XDG_CONFIG_HOME/init.lua" \
+#           --cmd "let &packpath = '$XDG_DATA_HOME/packpath'" \
+#           --cmd "luafile $XDG_CONFIG_HOME/lua/setup-runtime-env.lua" \
+# 					"$@"
+#--------------------------------------------------------------------
+# exec env XDG_DATA_HOME="$XDG_DATA_HOME" \
+# 	XDG_CACHE_HOME="$XDG_CACHE_HOME" \
+# 	XDG_CONFIG_HOME="$XDG_CONFIG_HOME" \
+# 	nvim -u "$XDG_CONFIG_HOME/init.lua" \
+# 	"$@"
+#====================================================================
+
+
+#====================================================================
+# 使用 NVIM_APPNAME
+#====================================================================
+# exec env XDG_DATA_HOME="$XDG_DATA_HOME" \
+# 	       XDG_CACHE_HOME="$XDG_CACHE_HOME" \
+# 		     XDG_CONFIG_HOME="$XDG_CONFIG_HOME" \
+# 		     NVIM_APPNAME="$MY_NVIM" \
+# 		 nvim -u "$XDG_CONFIG_HOME/init.lua" \
+#           --cmd "let &packpath = '$XDG_DATA_HOME/packpath'" \
+#           --cmd "luafile $XDG_CONFIG_HOME/lua/setup-runtime-env.lua" \
+# 					"$@"
+#--------------------------------------------------------------------
+# exec env NVIM_APPNAME="$MY_NVIM" \
+# 		 nvim -u "$XDG_CONFIG_HOME/init.lua" \
+#           --cmd "let &packpath = '$XDG_DATA_HOME/packpath'" \
+#           --cmd "luafile $XDG_CONFIG_HOME/lua/setup-runtime-env.lua" \
+# 					"$@"
+#--------------------------------------------------------------------
+# NVIM_APPNAME="$MY_NVIM" XDG_DATA_HOME="$XDG_DATA_HOME" XDG_CACHE_HOME="$XDG_CACHE_HOME" XDG_CONFIG_HOME="$XDG_CONFIG_HOME" \
+# 	nvim -u "$XDG_CONFIG_HOME/init.lua" "$@"
+#====================================================================
+
+exec NVIM_APPNAME="$MY_CONFIG_DIR" nvim

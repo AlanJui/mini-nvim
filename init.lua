@@ -3,25 +3,19 @@
 -- 初始階段
 ------------------------------------------------------------------------------
 local is_debug = os.getenv("DEBUG") or false
-local nvim_appname = os.getenv("NVIM_APPNAME") or ""
--- local my_nvim = nvim_appname
+local nvim_appname = os.getenv("NVIM_APPNAME") or "nvim"
+local my_nvim = nvim_appname
 
--- local config_dir = os.getenv("XDG_CONFIG_HOME")
--- local runtime_dir = os.getenv("XDG_DATA_HOME")
--- local cache_dir = os.getenv("XDG_CACHE_HOME")
-
-local my_nvim = os.getenv("MY_NVIM") or "nvim"
-local home_dir = os.getenv("HOME")
-local config_dir = home_dir .. "/.config/" .. my_nvim
-local runtime_dir = home_dir .. "/.local/share/" .. my_nvim
-local cache_dir = home_dir .. "/.cache/" .. my_nvim
+local config_dir = os.getenv("XDG_CONFIG_HOME")
+local runtime_dir = os.getenv("XDG_DATA_HOME")
+local cache_dir = os.getenv("XDG_CACHE_HOME")
 
 local lazy_dir = runtime_dir .. "/lazy"
 local lazypath = lazy_dir .. "/lazy.nvim"
 
 if is_debug then
   print("===========================================================")
-  print("My vars:")
+  print("Neovim Environment Variables:")
   print("===========================================================")
   print(string.format("nvim_appname = %s", nvim_appname))
   print(string.format("my_nvim = %s", my_nvim))
@@ -39,10 +33,18 @@ end
 -- 執行作業（Run Time）所需使用之擴充套件（Plugins）與 LSP Servers
 -- 可置於目錄： ~/.local/share/my-nvim/
 ------------------------------------------------------------------------------
-local function join_paths(...)
+
+---@diagnostic disable-next-line: unused-function, unused-local
+local function join_paths(...) -- luacheck: ignore
   local PATH_SEPERATOR = vim.loop.os_uname().version:match("Windows") and "\\" or "/"
   local result = table.concat({ ... }, PATH_SEPERATOR)
   return result
+end
+
+local function print_table(aTable)
+  for k, v in pairs(aTable) do
+    print("key = ", k, "    value = ", v)
+  end
 end
 
 local function tprint(tbl, indent)
@@ -76,33 +78,24 @@ local function PrintTableWithIndent(table, indent_size)
   print(tprint(table, indent_size))
 end
 
-local function print_stdpath()
-  print("====================================================================")
-  print("vim.fn.stdpath('XXX')")
-  print("====================================================================")
-  print("Configurations path: " .. config_dir)
-  print("stdpath('config') = " .. vim.fn.stdpath("config"))
-  print("--------------------------------------------------------------------")
-  print("Run Time Path: " .. runtime_dir)
-  print("stdpath('data') = " .. vim.fn.stdpath("data"))
-  print("--------------------------------------------------------------------")
-  print("Cache path:", cache_dir)
-  print("stdpath('cache') = " .. vim.fn.stdpath("cache"))
-end
-
 local function print_rtp()
   print("====================================================================")
   print("RTP Paths")
   print("====================================================================")
-  -- P(vim.api.nvim_list_runtime_paths())
   local rtp_table = vim.opt.runtimepath:get()
-  -- for k, v in pairs(rtp_table) do
-  --   print("key = ", k, "    value = ", v)
-  -- end
   PrintTableWithIndent(rtp_table, 4)
 end
 
-local function setup_run_time_environment()
+local function print_stdpath()
+  print("====================================================================")
+  print("vim.fn.stdpath('XXX')")
+  print("====================================================================")
+  print("vim.fn.stdpath('config') = " .. vim.fn.stdpath("config"))
+  print("vim.fn.stdpath('data') = " .. vim.fn.stdpath("data"))
+  print("vim.fn.stdpath('cache') = " .. vim.fn.stdpath("cache"))
+end
+
+local function setup_run_time_environment() -- luacheck: ignore
   -- 變更kstdpath('config') 預設的 rtp : ~/.config/nvim/
   vim.opt.rtp:remove(join_paths(vim.fn.stdpath("data"), "site"))
   vim.opt.rtp:remove(join_paths(vim.fn.stdpath("data"), "site", "after"))
@@ -128,24 +121,13 @@ end
 -------------------------------------------------------------------------------
 -- Main Program
 -------------------------------------------------------------------------------
-
--- -- 設定 Neovim 的執行環境
--- if is_debug then
---   -- 在「除錯」作業時，顯示 setup_rtp() 執行前、後， rtp 的設定內容。
---   -- before RTP is changed
---   print_rtp()
---   -- show current cache path
---   print("Cache path:", vim.fn.stdpath("cache"))
--- end
---
--- -- change Neovm default RTP
--- setup_run_time_environment()
---
--- if is_debug then
---   -- after new RTP is setuped
---   print_rtp() -- Check if the cache directory was updated successfully
---   print("Cache path:", vim.fn.stdpath("cache"))
--- end
+if is_debug then
+  print("===========================================================")
+  print("Neovim has been started!!")
+  print("===========================================================")
+  print_stdpath()
+  print_rtp()
+end
 
 -------------------------------------------------------------------------------
 -- Neovim 執行環境設定作業
@@ -200,7 +182,7 @@ require("config.lazy")
 -- Setup configuration of plugins
 -- 對已載入之各擴充套件，進行設定作業
 ------------------------------------------------------------------------------
-setup_run_time_environment()
+-- setup_run_time_environment()
 if is_debug then
   print("===========================================================")
   print("Lazy.nvim has been installed and loaded!!")
@@ -208,7 +190,7 @@ if is_debug then
   print_stdpath()
   print_rtp()
 end
--- require("plugins-rc")
+require("plugins-rc")
 
 -----------------------------------------------------------
 -- Setup colorscheme
